@@ -1,7 +1,6 @@
 // src/Application/UseCases/Auth/RegisterUser.js
-const User = require('../../../Domain/User/User');
-const UserOutput = require('../../DTOS/UserOutput');
-const UserAlreadyExistsException = require('../../../Domain/Exceptions/UserAlreadyExistsException');
+const User = require('@Domain/User/User');
+const UserAlreadyExistsException = require('@Domain/Exceptions/UserAlreadyExistsException');
 
 class RegisterUser {
   constructor(userRepository) {
@@ -18,9 +17,13 @@ class RegisterUser {
     
     const user = new User(input.name, input.email, input.password);
     
-    await this.userRepository.save(user);
+    const savedUser = await this.userRepository.save(user);
     
-    return new UserOutput(user);
+    return {
+      id: savedUser.id,
+      name: savedUser.name.value,
+      email: savedUser.email
+    };
   }
 }
 

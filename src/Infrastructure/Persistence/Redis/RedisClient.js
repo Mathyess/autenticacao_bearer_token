@@ -1,6 +1,6 @@
 // src/Infrastructure/Persistence/Redis/RedisClient.js
 const { createClient } = require('redis');
-const config = require('../../../config');
+const config = require('@config');
 
 const redisClient = createClient({
   url: config.redis.url // 'redis://localhost:6379'

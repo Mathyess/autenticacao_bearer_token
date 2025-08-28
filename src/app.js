@@ -13,10 +13,12 @@ const SequelizeUserRepository = require('./Infrastructure/Persistence/Sequelize/
 const RedisTokenBlacklistRepository = require('./Infrastructure/Persistence/Redis/RedisTokenBlacklistRepository');
 const JWTProvider = require('./Infrastructure/Providers/JWTProvider');
 const authRoutes = require('./Infrastructure/Express/routes/auth.routes');
+const { authenticateToken } = require('./Infrastructure/Express/middlewares/AuthMiddleware');
 
 // Importações dos Use Cases
 const RegisterUser = require('./Application/UseCases/Auth/RegisterUser');
 const LoginUser = require('./Application/UseCases/Auth/LoginUser');
+const LogoutUser = require('./Application/UseCases/Auth/LogoutUser');
 
 const app = express();
 
@@ -35,10 +37,16 @@ const jwtProvider = new JWTProvider();
 // Use Cases (recebem dependências de infraestrutura via construtor)
 const registerUserUseCase = new RegisterUser(userRepository);
 const loginUserUseCase = new LoginUser(userRepository, jwtProvider);
+const logoutUserUseCase = new LogoutUser(tokenBlacklistRepository);
 
 // Rotas da API
 // A rota principal do Express para o nosso serviço de autenticação
-app.use('/auth', authRoutes(registerUserUseCase, loginUserUseCase));
+app.use('/auth', authRoutes(registerUserUseCase, loginUserUseCase, logoutUserUseCase, tokenBlacklistRepository));
+
+// Rota protegida de exemplo
+app.get('/protected', authenticateToken(tokenBlacklistRepository), (req, res) => {
+  res.json({ message: 'This is a protected route', user: req.user });
+});
 
 // Configuração do Swagger UI
 try {

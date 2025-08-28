@@ -1,12 +1,12 @@
 // src/Infrastructure/Express/controllers/AuthController.js
-const RegisterUserInput = require('../../Application/DTOS/RegisterUserInput');
-const LoginUserInput = require('../../Application/DTOS/LoginUserInput');
-// Importar Use Cases injetados pelo app.js
+const RegisterUserInput = require('@Application/DTOS/RegisterUserInput');
+const LoginUserInput = require('@Application/DTOS/LoginUserInput');
 
 class AuthController {
-  constructor(registerUserUseCase, loginUserUseCase) {
+  constructor(registerUserUseCase, loginUserUseCase, logoutUserUseCase) {
     this.registerUserUseCase = registerUserUseCase;
     this.loginUserUseCase = loginUserUseCase;
+    this.logoutUserUseCase = logoutUserUseCase;
   }
 
   async register(req, res, next) {
@@ -33,11 +33,14 @@ class AuthController {
 
   async logout(req, res, next) {
     try {
-      // Aqui você precisaria de um Use Case ou lógica de aplicação para invalidar o token.
-      // Por exemplo:
-      // const token = req.headers.authorization.split(' ')[1];
-      // await this.logoutUserUseCase.execute(token);
-      return res.status(200).json({ message: 'Logged out successfully.' });
+      const token = req.headers.authorization?.split(' ')[1];
+      
+      if (!token) {
+        return res.status(401).json({ message: 'No token provided' });
+      }
+
+      const result = await this.logoutUserUseCase.execute(token);
+      return res.status(200).json(result);
     } catch (error) {
       next(error);
     }

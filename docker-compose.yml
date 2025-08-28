@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15
+    container_name: auth_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: exemplo_node
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - auth_network
+
+  # Redis Cache
+  redis:
+    image: redis:7.2
+    container_name: auth_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - auth_network
+
+  # Node.js Application
+  app:
+    build: .
+    container_name: auth_api
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DB_DIALECT=postgres
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/exemplo_node
+      - JWT_SECRET=supersecretjwtkey123456789
+      - JWT_EXPIRES_IN=1h
+      - REDIS_URL=redis://redis:6379
+      - REDIS_PASSWORD=
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - auth_network
+    command: npm run dev
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  auth_network:
+    driver: bridge
+

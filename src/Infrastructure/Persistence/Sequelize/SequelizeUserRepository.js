@@ -1,6 +1,6 @@
 // src/Infrastructure/Persistence/Sequelize/SequelizeUserRepository.js
 const UserModel = require('./models/UserModel');
-const User = require('../../../Domain/User/User');
+const User = require('@Domain/User/User');
 
 class SequelizeUserRepository {
   async save(user) {

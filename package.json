@@ -35,6 +35,13 @@
     "nodemon": "^3.1.10",
     "sequelize-cli": "^6.6.3"
   },
+  "_moduleAliases": {
+    "@": "src",
+    "@Application": "src/Application",
+    "@Domain": "src/Domain",
+    "@Infrastructure": "src/Infrastructure",
+    "@config": "src/config"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Mathyess/autenticacao_bearer_token.git"

@@ -1,6 +1,6 @@
 // src/Application/UseCases/Auth/LoginUser.js
-const UserOutput = require('../../DTOS/UserOutput');
-const InvalidCredentialsException = require('../../../Domain/Exceptions/InvalidCredentialsException');
+const UserOutput = require('@Application/DTOS/UserOutput');
+const InvalidCredentialsException = require('@Domain/Exceptions/InvalidCredentialsException');
 
 class LoginUser {
   constructor(userRepository, jwtProvider) {
