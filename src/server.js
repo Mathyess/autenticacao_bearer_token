@@ -12,16 +12,22 @@ async function startServer() {
     // Em produção, use migrações (npx sequelize-cli db:migrate)
     await sequelize.authenticate(); // Testa a conexão
     await sequelize.sync({ alter: true }); // Cria tabelas se não existirem ou altera
-    console.log('Database connected and synchronized!');
+    console.log('✅ Database connected and synchronized!');
     
-    await connectRedis(); // Conecta ao Redis
+    // Conecta ao Redis (opcional em desenvolvimento)
+    try {
+      await connectRedis();
+    } catch (error) {
+      console.warn('⚠️ Redis connection failed, continuing without Redis');
+    }
     
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-      console.log(`Access API at http://localhost:${PORT}`);
+      console.log(`🚀 Server running on port ${PORT}`);
+      console.log(`📖 API Documentation: http://localhost:${PORT}/api-docs`);
+      console.log(`🌐 API Base URL: http://localhost:${PORT}`);
     });
   } catch (error) {
-    console.error('Failed to start server:', error);
+    console.error('❌ Failed to start server:', error);
     process.exit(1); // Sai do processo com erro
   }
 }

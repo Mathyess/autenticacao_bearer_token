@@ -7,11 +7,23 @@ const redisClient = createClient({
 });
 
 redisClient.on('error', (err) => console.log('Redis Client Error', err));
+redisClient.on('connect', () => console.log('Redis Client Connected'));
+redisClient.on('ready', () => console.log('Redis Client Ready'));
 
 const connectRedis = async () => {
-  if (!redisClient.isReady) {
-    await redisClient.connect();
-    console.log('Connected to Redis');
+  try {
+    if (!redisClient.isReady) {
+      await redisClient.connect();
+      console.log('Connected to Redis');
+    }
+  } catch (error) {
+    console.error('Failed to connect to Redis:', error);
+    // Em desenvolvimento, podemos continuar sem Redis
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Continuing without Redis in development mode');
+    } else {
+      throw error;
+    }
   }
 };
 

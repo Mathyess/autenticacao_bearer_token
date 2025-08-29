@@ -1,6 +1,6 @@
-# API de Autenticação com JWT e Redis
+# 🔐 API de Autenticação com JWT e Redis
 
-API completa de autenticação desenvolvida em Node.js com Express, seguindo os princípios da Clean Architecture. Implementa registro, login, logout e autenticação via JWT com gerenciamento de sessão via Redis.
+API completa de autenticação desenvolvida em Node.js com Express, seguindo os princípios da **Clean Architecture**. Implementa registro, login, logout e autenticação via JWT com gerenciamento de sessão via Redis.
 
 ## 🚀 Funcionalidades
 
@@ -17,7 +17,8 @@ API completa de autenticação desenvolvida em Node.js com Express, seguindo os 
 ## 🛠️ Tecnologias
 
 - **Node.js** + **Express**
-- **PostgreSQL** + **Sequelize**
+- **SQLite** + **Sequelize** (Desenvolvimento)
+- **PostgreSQL** + **Sequelize** (Produção)
 - **Redis** (Docker)
 - **JWT** (JSON Web Tokens)
 - **bcryptjs** (Hash de senhas)
@@ -27,89 +28,34 @@ API completa de autenticação desenvolvida em Node.js com Express, seguindo os 
 ## 📋 Pré-requisitos
 
 - Node.js (v16+)
-- Docker Desktop
-- PostgreSQL
+- Docker Desktop (para Redis)
 - npm ou yarn
 
 ## 🔧 Instalação
 
-### **Opção 1: Docker (Recomendado) 🐳**
-
-1. **Clone o repositório**
+### **1. Clone o repositório**
 ```bash
 git clone https://github.com/Mathyess/autenticacao_bearer_token.git
 cd autenticacao_bearer_token
 ```
 
-2. **Certifique-se de que o Docker Desktop está rodando**
-
-3. **Execute o script de inicialização**
-
-**Windows (PowerShell):**
-```powershell
-.\start-docker.ps1
-```
-
-**Linux/Mac:**
-```bash
-chmod +x start-docker.sh
-./start-docker.sh
-```
-
-**Ou manualmente:**
-```bash
-docker-compose up --build -d
-```
-
-4. **Acesse a API**
-- API: http://localhost:3000
-- Documentação: http://localhost:3000/api-docs
-
-### **Opção 2: Instalação Local**
-
-1. **Clone o repositório**
-```bash
-git clone https://github.com/Mathyess/autenticacao_bearer_token.git
-cd autenticacao_bearer_token
-```
-
-2. **Instale as dependências**
+### **2. Instale as dependências**
 ```bash
 npm install
 ```
 
-3. **Configure as variáveis de ambiente**
-Crie um arquivo `.env` na raiz do projeto:
-```env
-# Server Configuration
-PORT=3000
+### **3. Configure as variáveis de ambiente**
+O arquivo `.env` será criado automaticamente com as configurações padrão:
+- SQLite para desenvolvimento
+- Redis via Docker
+- JWT configurado
 
-# Database Configuration
-DB_DIALECT=postgres
-DATABASE_URL=postgresql://postgres:password@localhost:5432/exemplo_node
-
-# JWT Configuration
-JWT_SECRET=supersecretjwtkey123456789
-JWT_EXPIRES_IN=1h
-
-# Redis Configuration
-REDIS_URL=redis://localhost:6379
-REDIS_PASSWORD=
-
-# Environment
-NODE_ENV=development
-```
-
-4. **Configure o banco de dados**
-- Crie um banco PostgreSQL chamado `exemplo_node`
-- Ajuste as credenciais no `.env` conforme necessário
-
-5. **Inicie o Redis via Docker**
+### **4. Inicie o Redis**
 ```bash
 docker-compose -f redis.yml up -d
 ```
 
-6. **Execute a aplicação**
+### **5. Execute a aplicação**
 ```bash
 # Desenvolvimento
 npm run dev
@@ -118,104 +64,61 @@ npm run dev
 npm start
 ```
 
-## 📚 Endpoints da API
+### **6. Acesse a API**
+- 🌐 **API Base URL**: http://localhost:3000
+- 📖 **Documentação Swagger**: http://localhost:3000/api-docs
 
-### 1. Registro de Usuário
-```http
-POST /auth/register
-Content-Type: application/json
+## 📚 API Endpoints
 
-{
-  "name": "João Silva",
-  "email": "joao@example.com",
-  "password": "123456"
-}
+| Método | Endpoint | Descrição | Autenticação |
+|--------|----------|-----------|--------------|
+| POST | `/auth/register` | Registrar usuário | ❌ |
+| POST | `/auth/login` | Fazer login | ❌ |
+| POST | `/auth/logout` | Fazer logout | ✅ |
+| GET | `/protected` | Rota protegida de exemplo | ✅ |
+| GET | `/api-docs` | Documentação Swagger | ❌ |
+
+## 🧪 Testando a API
+
+### **Script Automatizado**
+```bash
+node test-api.js
 ```
 
-**Resposta (201):**
-```json
-{
-  "id": "uuid-do-usuario",
-  "name": "João Silva",
-  "email": "joao@example.com"
-}
-```
+### **Testes Manuais**
 
-### 2. Login
-```http
-POST /auth/login
-Content-Type: application/json
-
-{
-  "email": "joao@example.com",
-  "password": "123456"
-}
-```
-
-**Resposta (200):**
-```json
-{
-  "token": "jwt-token-aqui",
-  "user": {
-    "id": "uuid-do-usuario",
+#### 1. Registrar Usuário
+```bash
+curl -X POST http://localhost:3000/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
     "name": "João Silva",
-    "email": "joao@example.com"
-  }
-}
+    "email": "joao@example.com",
+    "password": "123456"
+  }'
 ```
 
-### 3. Logout
-```http
-POST /auth/logout
-Authorization: Bearer jwt-token-aqui
+#### 2. Fazer Login
+```bash
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "joao@example.com",
+    "password": "123456"
+  }'
 ```
 
-**Resposta (200):**
-```json
-{
-  "message": "Logged out successfully"
-}
+#### 3. Acessar Rota Protegida
+```bash
+# Substitua TOKEN_AQUI pelo token recebido no login
+curl -X GET http://localhost:3000/protected \
+  -H "Authorization: Bearer TOKEN_AQUI"
 ```
 
-### 4. Rota Protegida
-```http
-GET /protected
-Authorization: Bearer jwt-token-aqui
-```
-
-**Resposta (200):**
-```json
-{
-  "message": "This is a protected route",
-  "user": {
-    "userId": "uuid-do-usuario",
-    "email": "joao@example.com"
-  }
-}
-```
-
-## 🔐 Autenticação
-
-### Como usar tokens JWT:
-
-1. **Faça login** para obter um token
-2. **Inclua o token** no header `Authorization: Bearer <token>`
-3. **Acesse rotas protegidas** com o token
-4. **Faça logout** para invalidar o token
-
-### Segurança:
-
-- Tokens expiram em 1 hora (configurável)
-- Logout adiciona tokens à blacklist no Redis
-- Senhas são hasheadas com bcrypt
-- Validação de dados com Joi
-- Middleware verifica blacklist antes de validar tokens
-
-## 📖 Documentação
-
-Acesse a documentação interativa da API em:
-```
-http://localhost:3000/api-docs
+#### 4. Fazer Logout
+```bash
+curl -X POST http://localhost:3000/auth/logout \
+  -H "Authorization: Bearer TOKEN_AQUI"
 ```
 
 ## 🏗️ Arquitetura
@@ -225,129 +128,82 @@ O projeto segue os princípios da **Clean Architecture**:
 ```
 src/
 ├── Application/          # Casos de uso e DTOs
+│   ├── DTOS/
+│   └── UseCases/
 ├── Domain/              # Entidades e regras de negócio
+│   ├── Exceptions/
+│   ├── Repositories/
+│   └── User/
 ├── Infrastructure/      # Implementações externas
-│   ├── Express/         # Controllers, middlewares, rotas
-│   ├── Persistence/     # Repositórios (Sequelize, Redis)
-│   └── Providers/       # JWT, etc.
-└── config/              # Configurações
+│   ├── Express/
+│   ├── Persistence/
+│   └── Providers/
+└── config/             # Configurações
 ```
 
-## 🧪 Testando a API
+## 🔐 Autenticação
 
-### Com curl:
+O sistema usa JWT (JSON Web Tokens) para autenticação. Inclua o token no header:
 
+```
+Authorization: Bearer <seu-token>
+```
+
+## 🗄️ Banco de Dados
+
+### **Desenvolvimento**
+- **SQLite**: Arquivo local `database.sqlite`
+- **Redis**: Container Docker para cache e blacklist
+
+### **Produção**
+- **PostgreSQL**: Banco de dados principal
+- **Redis**: Cache e gerenciamento de sessão
+
+## 🚀 Deploy
+
+### **Variáveis de Ambiente para Produção**
+```env
+NODE_ENV=production
+DB_DIALECT=postgres
+DATABASE_URL=postgresql://user:password@host:5432/database
+JWT_SECRET=your-super-secret-jwt-key
+JWT_EXPIRES_IN=1h
+REDIS_URL=redis://host:6379
+```
+
+## 📝 Logs
+
+### **Verificar Status do Redis**
 ```bash
-# 1. Registrar usuário
-curl -X POST http://localhost:3000/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Teste","email":"teste@example.com","password":"123456"}'
-
-# 2. Fazer login
-curl -X POST http://localhost:3000/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"teste@example.com","password":"123456"}'
-
-# 3. Acessar rota protegida (substitua TOKEN_AQUI pelo token recebido)
-curl -X GET http://localhost:3000/protected \
-  -H "Authorization: Bearer TOKEN_AQUI"
-
-# 4. Fazer logout
-curl -X POST http://localhost:3000/auth/logout \
-  -H "Authorization: Bearer TOKEN_AQUI"
+docker-compose -f redis.yml ps
+docker-compose -f redis.yml logs
 ```
 
-### Com Postman/Insomnia:
-
-1. Importe a coleção do Swagger
-2. Configure as variáveis de ambiente
-3. Teste os endpoints sequencialmente
-
-## 🐳 Docker
-
-### **Comandos Docker**
-
-**Iniciar todos os serviços:**
+### **Parar Redis**
 ```bash
-docker-compose up --build -d
+docker-compose -f redis.yml down
 ```
 
-**Ver logs em tempo real:**
-```bash
-docker-compose logs -f app
-```
+## 🎯 Critérios de Aceite
 
-**Parar todos os serviços:**
-```bash
-docker-compose down
-```
-
-**Reiniciar apenas a aplicação:**
-```bash
-docker-compose restart app
-```
-
-**Ver status dos containers:**
-```bash
-docker-compose ps
-```
-
-**Acessar container da aplicação:**
-```bash
-docker-compose exec app sh
-```
-
-**Limpar volumes (cuidado - apaga dados):**
-```bash
-docker-compose down -v
-```
-
-## 📝 Scripts Disponíveis
-
-```bash
-npm start          # Inicia em produção
-npm run dev        # Inicia em desenvolvimento (nodemon)
-```
-
-## 🔧 Configurações
-
-### JWT
-- **Secret**: Configurado via `JWT_SECRET`
-- **Expiração**: 1 hora (configurável via `JWT_EXPIRES_IN`)
-
-### Redis
-- **URL**: `redis://localhost:6379`
-- **TTL**: Tokens na blacklist expiram automaticamente
-
-### Banco de Dados
-- **Dialect**: PostgreSQL
-- **Sincronização**: Automática em desenvolvimento
-- **Migrações**: Use `npx sequelize-cli` para produção
-
-## 🚨 Tratamento de Erros
-
-A API retorna códigos de status HTTP apropriados:
-
-- `200` - Sucesso
-- `201` - Criado com sucesso
-- `400` - Dados inválidos
-- `401` - Não autorizado (token ausente/inválido)
-- `403` - Token revogado
-- `409` - Usuário já existe
-- `500` - Erro interno
-
-## 🤝 Contribuição
-
-1. Fork o projeto
-2. Crie uma branch para sua feature
-3. Commit suas mudanças
-4. Push para a branch
-5. Abra um Pull Request
-
-## 📄 Licença
-
-Este projeto está sob a licença ISC. Veja o arquivo `LICENSE` para mais detalhes.
+✅ **Registro de usuário** - Endpoint POST `/auth/register` funcionando  
+✅ **Login com JWT** - Endpoint POST `/auth/login` retorna token  
+✅ **Logout seguro** - Endpoint POST `/auth/logout` adiciona token à blacklist  
+✅ **Autenticação via Bearer Token** - Middleware protege rotas  
+✅ **Blacklist no Redis** - Tokens revogados são verificados  
+✅ **Documentação Swagger** - Acessível em `/api-docs`  
+✅ **Validação de dados** - Schemas Joi validam entrada  
+✅ **Tratamento de erros** - Middleware centralizado  
+✅ **Rotas protegidas** - Exemplo em GET `/protected`  
 
 ## 📞 Suporte
 
-Para dúvidas ou problemas, abra uma issue no GitHub.
+Se encontrar problemas:
+1. Verifique se o Docker está rodando
+2. Confirme se o Redis está ativo: `docker ps`
+3. Verifique os logs do servidor
+4. Execute o script de teste: `node test-api.js`
+
+## 📄 Licença
+
+Este projeto está sob a licença ISC.

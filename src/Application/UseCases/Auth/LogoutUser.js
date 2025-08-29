@@ -16,7 +16,7 @@ class LogoutUser {
         throw new Error('Invalid token format');
       }
 
-      // Calcula o tempo restante até a expiração
+      // Calcula o tempo restante de expiração
       const currentTime = Math.floor(Date.now() / 1000);
       const tokenExp = decoded.exp;
       const timeToExpire = tokenExp - currentTime;
@@ -37,4 +37,3 @@ class LogoutUser {
 }
 
 module.exports = LogoutUser;
-

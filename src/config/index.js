@@ -6,8 +6,8 @@ module.exports = {
     port: process.env.PORT || 3000,
   },
   db: {
-    dialect: process.env.DB_DIALECT || 'postgres',
-    url: process.env.DATABASE_URL || 'postgresql://postgres:password@localhost:5432/exemplo_node',
+    dialect: process.env.DB_DIALECT || 'sqlite',
+    url: process.env.DATABASE_URL || './database.sqlite',
   },
   jwt: {
     secret: process.env.JWT_SECRET || 'supersecretjwtkey',

@@ -2,10 +2,20 @@
 const { Sequelize } = require('sequelize');
 const config = require('@config');
 
-const sequelize = new Sequelize(config.db.url, {
-  dialect: config.db.dialect, // 'postgres' ou 'mysql'
-  logging: false, // Desabilitar logs do Sequelize para produção
-});
+let sequelize;
+
+if (config.db.dialect === 'sqlite') {
+  sequelize = new Sequelize({
+    dialect: 'sqlite',
+    storage: config.db.url,
+    logging: false,
+  });
+} else {
+  sequelize = new Sequelize(config.db.url, {
+    dialect: config.db.dialect,
+    logging: false,
+  });
+}
 
 module.exports = sequelize;
 
