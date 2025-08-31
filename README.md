@@ -11,6 +11,7 @@ API completa de autenticação desenvolvida em Node.js com Express, seguindo os 
 - ✅ **Blacklist de tokens** - Gerenciamento via Redis
 - ✅ **Rotas protegidas** - Exemplo em GET `/protected`
 - ✅ **Documentação Swagger** - Acessível em `/api-docs`
+- ✅ **Frontend completo** - Interface web moderna e responsiva
 - ✅ **Validação de dados** - Schemas Joi
 - ✅ **Tratamento de erros** - Middleware centralizado
 
@@ -64,9 +65,10 @@ npm run dev
 npm start
 ```
 
-### **6. Acesse a API**
-- 🌐 **API Base URL**: http://localhost:3000
+### **6. Acesse a aplicação**
+- 🌐 **Frontend**: http://localhost:3000
 - 📖 **Documentação Swagger**: http://localhost:3000/api-docs
+- 🔧 **API Base URL**: http://localhost:3000
 
 ## 📚 API Endpoints
 
@@ -78,7 +80,34 @@ npm start
 | GET | `/protected` | Rota protegida de exemplo | ✅ |
 | GET | `/api-docs` | Documentação Swagger | ❌ |
 
+## 🎨 Frontend
+
+A aplicação inclui um frontend completo e moderno para testar todas as funcionalidades da API:
+
+### **Características do Frontend**
+- 🎨 **Design responsivo** - Funciona em desktop, tablet e mobile
+- 🔐 **Autenticação completa** - Registro, login e logout
+- 📊 **Monitoramento em tempo real** - Visualização das respostas da API
+- 🛡️ **Teste de rotas protegidas** - Interface para testar autenticação
+- 💾 **Persistência de sessão** - Token salvo no localStorage
+
+### **Como Usar o Frontend**
+1. Acesse `http://localhost:3000` no navegador
+2. Registre um novo usuário ou faça login
+3. Teste as funcionalidades através da interface
+4. Monitore as respostas da API na área de resultados
+
+### **Tecnologias do Frontend**
+- **HTML5** - Estrutura semântica
+- **CSS3** - Flexbox, Grid, Gradientes, Animações
+- **JavaScript ES6+** - Async/await, Fetch API, LocalStorage
+- **Font Awesome** - Ícones
+- **Express.js** - Servidor para arquivos estáticos
+
 ## 🧪 Testando a API
+
+### **Via Frontend (Recomendado)**
+Acesse `http://localhost:3000` e use a interface web para testar todas as funcionalidades.
 
 ### **Script Automatizado**
 ```bash

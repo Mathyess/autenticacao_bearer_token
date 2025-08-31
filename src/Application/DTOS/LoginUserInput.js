@@ -4,7 +4,12 @@ class LoginUserInput {
     if (!email || !password) {
       throw new Error("Email and password are required.");
     }
-    this.email = email;
+    
+    if (typeof email !== 'string' || typeof password !== 'string') {
+      throw new Error("Email and password must be strings.");
+    }
+    
+    this.email = email.trim().toLowerCase();
     this.password = password;
   }
 }

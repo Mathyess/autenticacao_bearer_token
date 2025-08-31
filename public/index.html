@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth API - Sistema de Autenticação</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-terminal"></i> AUTH_SYSTEM</h1>
+            <p>JWT Authentication API v1.0.0</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Formulário de Login -->
+            <div class="auth-form" id="loginForm">
+                <h2><i class="fas fa-sign-in-alt"></i> AUTHENTICATE</h2>
+                <form id="loginFormElement">
+                    <div class="form-group">
+                        <label for="loginEmail">Email:</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Senha:</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i> AUTHENTICATE
+                    </button>
+                </form>
+                <p class="form-switch">
+                    Não tem uma conta? 
+                    <a href="#" onclick="showRegisterForm()">Registrar</a>
+                </p>
+            </div>
+
+            <!-- Formulário de Registro -->
+            <div class="auth-form hidden" id="registerForm">
+                <h2><i class="fas fa-user-plus"></i> REGISTER</h2>
+                <form id="registerFormElement">
+                    <div class="form-group">
+                        <label for="registerName">Nome:</label>
+                        <input type="text" id="registerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email:</label>
+                        <input type="email" id="registerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Senha:</label>
+                        <input type="password" id="registerPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-user-plus"></i> REGISTER
+                    </button>
+                </form>
+                <p class="form-switch">
+                    Já tem uma conta? 
+                    <a href="#" onclick="showLoginForm()">Fazer Login</a>
+                </p>
+            </div>
+
+            <!-- Dashboard do Usuário -->
+            <div class="dashboard hidden" id="dashboard">
+                <h2><i class="fas fa-user-circle"></i> DASHBOARD</h2>
+                <div class="user-info">
+                    <p><strong>Bem-vindo,</strong> <span id="userName"></span>!</p>
+                    <p><strong>Email:</strong> <span id="userEmail"></span></p>
+                </div>
+                <div class="dashboard-actions">
+                    <button class="btn btn-info" onclick="testProtectedRoute()">
+                        <i class="fas fa-lock"></i> TEST PROTECTED ROUTE
+                    </button>
+                    <button class="btn btn-warning" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> LOGOUT
+                    </button>
+                </div>
+            </div>
+
+            <!-- Área de Resultados -->
+            <div class="results-area">
+                <h3><i class="fas fa-terminal"></i> API RESPONSES</h3>
+                <div class="response-container">
+                    <pre id="apiResponse">No responses yet...</pre>
+                </div>
+            </div>
+        </main>
+
+        <!-- Loading Spinner -->
+        <div class="loading hidden" id="loading">
+            <div class="spinner"></div>
+            <p>Processando...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

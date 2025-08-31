@@ -1,5 +1,5 @@
 // src/Infrastructure/Express/middlewares/AuthMiddleware.js
-const jwt = require('jsonwebtoken');
+const JWTProvider = require('@Infrastructure/Providers/JWTProvider');
 const config = require('@config');
 
 const authenticateToken = (tokenBlacklistRepository) => {
@@ -18,16 +18,18 @@ const authenticateToken = (tokenBlacklistRepository) => {
         return res.status(401).json({ message: 'Token has been revoked' });
       }
 
-      // Verifica a validade do token
-      jwt.verify(token, config.jwt.secret, (err, user) => {
-        if (err) {
-          return res.status(403).json({ message: 'Invalid token' });
-        }
-
-        req.user = user; // Adiciona os dados do usuário decodificados ao objeto req
-        next();
-      });
+      // Verifica a validade do token usando JWTProvider
+      const jwtProvider = new JWTProvider();
+      const decoded = jwtProvider.verifyToken(token);
+      
+      if (!decoded) {
+        return res.status(403).json({ message: 'Invalid token' });
+      }
+      
+      req.user = decoded; // Adiciona os dados do usuário decodificados ao objeto req
+      next();
     } catch (error) {
+      console.error('Authentication error:', error);
       return res.status(500).json({ message: 'Internal server error during authentication' });
     }
   };

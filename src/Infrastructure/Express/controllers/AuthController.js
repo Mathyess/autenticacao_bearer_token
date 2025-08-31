@@ -12,6 +12,15 @@ class AuthController {
   async register(req, res, next) {
     try {
       const { name, email, password } = req.body;
+      
+      // Validação básica de entrada
+      if (!name || !email || !password) {
+        return res.status(400).json({ 
+          status: 'error',
+          message: 'Name, email, and password are required' 
+        });
+      }
+      
       const input = new RegisterUserInput(name, email, password);
       const userOutput = await this.registerUserUseCase.execute(input);
       return res.status(201).json(userOutput);
@@ -23,6 +32,15 @@ class AuthController {
   async login(req, res, next) {
     try {
       const { email, password } = req.body;
+      
+      // Validação básica de entrada
+      if (!email || !password) {
+        return res.status(400).json({ 
+          status: 'error',
+          message: 'Email and password are required' 
+        });
+      }
+      
       const input = new LoginUserInput(email, password);
       const authOutput = await this.loginUserUseCase.execute(input);
       return res.status(200).json(authOutput);

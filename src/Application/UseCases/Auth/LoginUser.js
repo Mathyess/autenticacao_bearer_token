@@ -22,7 +22,17 @@ class LoginUser {
       throw new InvalidCredentialsException('Invalid email or password.');
     }
     
-    const token = this.jwtProvider.generateToken({ userId: user.id, email: user.email.value });
+    // Verificar se o usuário tem ID válido
+    if (!user.id) {
+      throw new Error('User ID is required for token generation');
+    }
+    
+    const tokenPayload = { 
+      userId: user.id, 
+      email: user.email.value 
+    };
+    
+    const token = this.jwtProvider.generateToken(tokenPayload);
     
     return new UserOutput(token, {
       id: user.id,

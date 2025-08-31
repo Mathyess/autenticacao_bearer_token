@@ -22,7 +22,7 @@ class RegisterUser {
     return {
       id: savedUser.id,
       name: savedUser.name.value,
-      email: savedUser.email
+      email: savedUser.email.value
     };
   }
 }

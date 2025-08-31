@@ -37,3 +37,5 @@ class LogoutUser {
 }
 
 module.exports = LogoutUser;
+
+
