@@ -23,7 +23,7 @@ const authenticateToken = (tokenBlacklistRepository) => {
       const decoded = jwtProvider.verifyToken(token);
       
       if (!decoded) {
-        return res.status(403).json({ message: 'Invalid token' });
+        return res.status(401).json({ message: 'Invalid token' });
       }
       
       req.user = decoded; // Adiciona os dados do usuário decodificados ao objeto req
